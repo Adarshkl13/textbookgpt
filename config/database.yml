@@ -1,0 +1,28 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: ai_book        # Name of the DB you created
+  username: postgres       # The PostgreSQL user (superuser in your case)
+  password: root                # Leave blank if not using a password
+  host: localhost          # Or 127.0.0.1
+  port: 5432               # Default PostgreSQL port
+
+test:
+  <<: *default
+  database: ai_book_test   # Typically you'd create a separate test DB
+  username: postgres
+  password: root
+  host: localhost
+  port: 5432
+
+production:
+  <<: *default
+  database: ai_book_production
+  username: postgres
+  password: <%= ENV['PG_PASSWORD'] %>  # Usually stored in an env variable for production
+  host: localhost
+  port: 5432

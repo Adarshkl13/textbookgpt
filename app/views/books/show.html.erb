@@ -1,0 +1,209 @@
+<!-- app/views/books/show.html.erb -->
+
+<h1><%= @book.title %></h1>
+<p><strong>Class Name:</strong> <%= @book.class_name %></p>
+<p><strong>Medium:</strong> <%= @book.medium %></p>
+<p><strong>Year:</strong> <%= @book.year %></p>
+
+<!-- Optional preview of the book content -->
+<h2>Book Content (Preview)</h2>
+<p><%= simple_format(@book.content.truncate(10)) %></p>
+
+<hr>
+
+<h2>Ask a Question about "<%= @book.title %>"</h2>
+
+<!-- Display an AI answer if @answer is set -->
+<% if flash[:alert].present? %>
+  <div style="color: red; margin: 1rem 0;">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
+
+<h3>Last Asked Question</h3>
+<turbo-frame id="last-question">
+  <% if @book.questions.any? %>
+    <%= render "last_question", question: @book.questions.last %>
+  <% else %>
+    <p>No questions have been asked yet.</p>
+  <% end %>
+</turbo-frame>
+<%= turbo_stream_from "book_#{@book.id}" %>
+
+<!-- Form to POST a question to BooksController#question -->
+
+<!-- Form to POST a question to BooksController#question -->
+<%= form_with(url: question_book_path(@book), method: :post, local: false, id: "question-form", data: { turbo: false }) do |form| %>
+
+  <!-- Textarea for typed or voice-dictated questions -->
+  <div>
+    <%= form.label :question, "Your Question:" %><br>
+    <%= form.text_area :question, rows: 3, id: "question-input" %>
+  </div>
+
+  <!-- Voice recognition buttons -->
+  <div style="margin-top: 0.5rem;">
+    <button type="button" id="start-voice-btn">🎤 Start Voice Recognition</button>
+    <button type="button" id="stop-voice-btn" style="display: none;">Stop</button>
+  </div>
+
+  <div style="margin-top: 1rem;">
+    <%= form.submit "Ask" %>
+  </div>
+<% end %>
+
+
+
+
+
+
+<script data-turbo-eval="false">
+document.addEventListener("turbo:load", () => {
+  /****************************************
+   * PART 1: TEXT-TO-SPEECH (Speak Answer)
+   ****************************************/
+  let isSpeaking = false; // Track whether speech is currently active
+  let utterance; // Store the utterance globally to manage stop functionality
+
+  function attachSpeakAnswerListener() {
+    const speakButton = document.getElementById("answer-speak-btn");
+    const answerTextEl = document.getElementById("answer-text");
+
+    if (speakButton && answerTextEl) {
+      // Remove any existing event listeners to avoid duplication
+      speakButton.removeEventListener("click", handleSpeakAnswerClick);
+
+      // Add the new event listener
+      speakButton.addEventListener("click", handleSpeakAnswerClick);
+
+      function handleSpeakAnswerClick() {
+        const answerText = answerTextEl.textContent.trim();
+
+        if (!answerText || answerText === "Processing...") {
+          alert("No answer available to speak yet.");
+          return;
+        }
+
+        if (isSpeaking) {
+          // Stop speaking
+          window.speechSynthesis.cancel();
+          isSpeaking = false;
+          speakButton.textContent = "Speak Answer";
+        } else {
+          // Start speaking
+          utterance = new SpeechSynthesisUtterance(answerText);
+          utterance.lang = "en-IN";
+
+          // Set Indian English voice if available
+          const voices = speechSynthesis.getVoices();
+          const inVoice = voices.find((v) => v.lang === "en-IN");
+          if (inVoice) utterance.voice = inVoice;
+
+          utterance.onend = () => {
+            isSpeaking = false;
+            speakButton.textContent = "Speak Answer";
+          };
+
+          window.speechSynthesis.speak(utterance);
+          isSpeaking = true;
+          speakButton.textContent = "Stop Speaking";
+        }
+      }
+    } else {
+      console.warn("Speak Answer button or Answer Text element not found.");
+    }
+  }
+
+  function initializeVoicesAndAttachListener() {
+    // Check if voices are already available
+    if (speechSynthesis.getVoices().length > 0) {
+      attachSpeakAnswerListener();
+    } else {
+      // If voices are not loaded, wait for the "voiceschanged" event
+      speechSynthesis.addEventListener("voiceschanged", () => {
+        attachSpeakAnswerListener();
+      });
+    }
+  }
+
+  // Initialize the listener on page load
+  initializeVoicesAndAttachListener();
+
+  // Re-attach the listener whenever the Turbo frame is updated
+  document.addEventListener("turbo:frame-load", (event) => {
+    if (event.target.id === "last-question") {
+      initializeVoicesAndAttachListener();
+    }
+  });
+});
+
+
+
+
+
+  /****************************************
+   * PART 2: SPEECH RECOGNITION (Voice Input)
+   ****************************************/
+document.addEventListener("DOMContentLoaded", () => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    console.warn("This browser does not support the Web Speech API for recognition.");
+  } else {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-IN";
+
+    const startVoiceBtn = document.getElementById("start-voice-btn");
+    const stopVoiceBtn = document.getElementById("stop-voice-btn");
+    const questionInput = document.getElementById("question-input");
+
+    if (startVoiceBtn && stopVoiceBtn && questionInput) {
+      startVoiceBtn.addEventListener("click", () => {
+        recognition.start();
+        startVoiceBtn.style.display = "none";
+        stopVoiceBtn.style.display = "inline";
+      });
+
+      stopVoiceBtn.addEventListener("click", () => {
+        recognition.stop();
+        stopVoiceBtn.style.display = "none";
+        startVoiceBtn.style.display = "inline";
+      });
+
+      recognition.onresult = (event) => {
+        const speechResult = event.results[0][0].transcript;
+        console.log("Speech recognized:", speechResult);
+
+        if (questionInput.value.trim() === "") {
+          questionInput.value = speechResult;
+        } else {
+          questionInput.value += " " + speechResult;
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        stopVoiceBtn.style.display = "none";
+        startVoiceBtn.style.display = "inline";
+      };
+
+      recognition.onend = () => {
+        console.log("Speech recognition ended");
+        stopVoiceBtn.style.display = "none";
+        startVoiceBtn.style.display = "inline";
+      };
+    }
+  }
+
+  const questionInput = document.getElementById("question-input");
+
+  if (questionInput) {
+    questionInput.value = ""; // Clear the question input field after the page reloads
+  }
+});
+
+</script>
