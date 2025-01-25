@@ -24,5 +24,4 @@ production:
   database: ai_book_production
   username: postgres
   password: <%= ENV['PG_PASSWORD'] %>  # Usually stored in an env variable for production
-  host: localhost
-  port: 5432
+ 
