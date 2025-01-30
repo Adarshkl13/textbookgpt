@@ -13,3 +13,15 @@
  *= require_tree .
  *= require_self
  */
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
+ @import "font-awesome";
+
+ @media screen and (max-width: 768px) {
+    .mobile-navbar {
+      display: block !important;
+    }
+    .desktop-navbar {
+      display: none !important;
+    }
+  }

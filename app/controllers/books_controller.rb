@@ -12,8 +12,8 @@ class BooksController < ApplicationController
     question_text = params[:question]
 
     # Check if the user has already asked 10 questions today
-    if Question.asked_today(current_user).count >= 1000
-      flash[:alert] = "You have reached the daily limit of 10 questions. Please try again tomorrow."
+    if Question.asked_today(current_user).count >= 1
+      flash[:alert] = "You have reached the daily limit of 10 questions. Please try again tomorrow"
       redirect_to book_path(@book) and return
     end
 

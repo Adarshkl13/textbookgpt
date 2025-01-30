@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Mobile</title>
+    <style>
+      .fixed-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030; /* Ensures it stays above other content */
+        background-color: #f8f9fa; /* Optional: background color */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+      }
+      body {
+        margin-top: 50px; /* Adjust to navbar height */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="w3-bar w3-theme-d2 fixed-top">
+      <%= link_to "Class", "/classrooms", class: "w3-bar-item w3-button w3-hide-medium w3-hide-large" %>
+      <%= link_to "Login", new_user_session_path, class: "w3-bar-item w3-button w3-hide-medium w3-hide-large" %>
+      <%= link_to "Register", new_user_registration_path, class: "w3-bar-item w3-button w3-hide-medium w3-hide-large" %>
+    </div>
+  </body>
+</html>

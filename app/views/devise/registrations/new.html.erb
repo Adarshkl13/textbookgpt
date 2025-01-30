@@ -1,29 +1,60 @@
-<h2>Sign up</h2>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My App - Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <!-- W3.CSS (if not already included in your layout) -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+    .w3-display-middle {
+      position: absolute;
+      top: 44%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);}
+    </style>
+  </head>
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
+  <!-- Make the body a display container so we can center content -->
+  <body class="w3-light-grey w3-display-container" style="height: 100vh;">
+    <!-- Centered card for the sign-up form -->
+    <div class="w3-display-middle w3-card w3-white w3-padding" style="max-width: 400px; width: 90%;">
+      <h2 class="w3-center">Sign up</h2>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <!-- Devise error messages -->
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+        <div class="w3-margin-bottom">
+          <%= f.label :email %><br>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w3-input w3-border" %>
+        </div>
 
-<%= render "devise/shared/links" %>
+        <div class="w3-margin-bottom">
+          <%= f.label :password %>
+          <% if @minimum_password_length %>
+            <em>(<%= @minimum_password_length %> characters minimum)</em>
+          <% end %><br>
+          <%= f.password_field :password, autocomplete: "new-password", class: "w3-input w3-border" %>
+        </div>
+
+        <div class="w3-margin-bottom">
+          <%= f.label :password_confirmation %><br>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w3-input w3-border" %>
+        </div>
+
+        <%= f.submit "Sign up", class: "w3-button w3-black w3-block" %>
+      <% end %>
+
+      <div class="w3-center" style="margin-top: 16px;">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </body>
+</html>

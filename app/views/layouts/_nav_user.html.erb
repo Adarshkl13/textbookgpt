@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Eximsquare</title>
+    <style>
+      .w3-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+        background-color: #f8f9fa; /* Optional: Set a background color */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+      }
+
+      body {
+        margin-top: 50px; /* Adjust this value based on your navbar height */
+      }
+    </style>
+  </head>
+  <body class="w3-light-grey">
+    <!-- Navbar -->
+    <div class="w3-top">
+      <div class="w3-bar w3-theme-d2 w3-left-align">
+        <a href="/classrooms" class="w3-bar-item w3-button w3-teal w3-hide-small">
+          <i class="fa fa-home w3-margin-right"></i>Class
+        </a>
+        <a>
+        <%= link_to "Account setting",edit_user_registration_path,class: "w3-bar-item w3-button w3-hide-small w3-hover-white"%>
+        </a>
+        <a>
+        <%= link_to "Logout", destroy_user_session_path,data: { turbo_method: :delete },class: "w3-bar-item w3-button w3-hide-small w3-hover-white"%>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

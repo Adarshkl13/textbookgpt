@@ -1,16 +1,54 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>BookAi</title>
+    <title>Eximsquare</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ <style>
+      .flash-container {
+        margin-top: 56px; /* Adjust this to match your navbar height */
+      }
+
+
+    </style>
   </head>
 
-  <body>
-    <%= yield %>
-  </body>
+<body class="w3-light-grey">
+
+
+
+<%= render '/layouts/find_device' %>
+<div class="flash-container">
+<% if alert.present? %>
+    <div class="w3-panel w3-red w3-display-container w3-card-4 w3-center"
+     style="margin-bottom: 16px; padding: 0.44em 0px;">
+  <span onclick="this.parentElement.style.display='none'"
+        class="w3-button w3-red w3-large w3-display-topright">
+    &times;
+  </span>
+  <p><%= alert %></p>
+</div>
+    <% end %>
+
+    <% if notice.present? %>
+      <div class="w3-panel w3-green w3-display-container w3-card-4 w3-center"
+     style="margin-bottom: 16px; padding: 0.44em 0px;">
+        <span onclick="this.parentElement.style.display='none'"
+              class="w3-button w3-green w3-large w3-display-topright">
+          &times;
+        </span>
+        <p><%= notice %></p>
+      </div>
+    <% end %>
+</div>
+<span class="notice"><%= yield %></span>
+
+</body>
 </html>

@@ -1,61 +1,82 @@
-<!-- app/views/books/show.html.erb -->
-
-<h1><%= @book.title %></h1>
-<p><strong>Class Name:</strong> <%= @book.class_name %></p>
-<p><strong>Medium:</strong> <%= @book.medium %></p>
-<p><strong>Year:</strong> <%= @book.year %></p>
-
-<!-- Optional preview of the book content -->
-<h2>Book Content (Preview)</h2>
-<p><%= simple_format(@book.content.truncate(10)) %></p>
-
-<hr>
-
-<h2>Ask a Question about "<%= @book.title %>"</h2>
-
-<!-- Display an AI answer if @answer is set -->
-<% if flash[:alert].present? %>
-  <div style="color: red; margin: 1rem 0;">
-    <%= flash[:alert] %>
-  </div>
-<% end %>
-
-
-<h3>Last Asked Question</h3>
-<turbo-frame id="last-question">
-  <% if @book.questions.any? %>
-    <%= render "last_question", question: @book.questions.last %>
-  <% else %>
-    <p>No questions have been asked yet.</p>
-  <% end %>
-</turbo-frame>
-<%= turbo_stream_from "book_#{@book.id}" %>
-
-<!-- Form to POST a question to BooksController#question -->
-
-<!-- Form to POST a question to BooksController#question -->
-<%= form_with(url: question_book_path(@book), method: :post, local: false, id: "question-form", data: { turbo: false }) do |form| %>
-
-  <!-- Textarea for typed or voice-dictated questions -->
-  <div>
-    <%= form.label :question, "Your Question:" %><br>
-    <%= form.text_area :question, rows: 3, id: "question-input" %>
+<div class="container mt-1">
+  <!-- Book Details Section -->
+  <div class="row">
+    <div class="col-md-12">
+      <h4 class="mb-4"><b><%= @book.class_name %> = <%= @book.title %> = <%= @book.year %></b></h4>
+    </div>
   </div>
 
-  <!-- Voice recognition buttons -->
-  <div style="margin-top: 0.5rem;">
-    <button type="button" id="start-voice-btn">🎤 Start Voice Recognition</button>
-    <button type="button" id="stop-voice-btn" style="display: none;">Stop</button>
+  
+
+
+  <!-- Last Asked Question -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title"><b>Last Asked Question</b></h5>
+          <turbo-frame id="last-question">
+            <% if @book.questions.any? %>
+              <%= render "last_question", question: @book.questions.last %>
+            <% else %>
+              <p class="text-muted">No questions have been asked yet.</p>
+            <% end %>
+          </turbo-frame>
+          <%= turbo_stream_from "book_#{@book.id}" %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div style="margin-top: 1rem;">
-    <%= form.submit "Ask" %>
+  <!-- Question Form -->
+<div class="row fixed-form">
+  <div class="col-md-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <%= form_with(url: question_book_path(@book), method: :post, local: false, id: "question-form", data: { turbo: false }) do |form| %>
+          <!-- Textarea for typed or voice-dictated questions -->
+          <div class="mb-4">
+            <%= form.label :question, "Your Question:", class: "form-label" %>
+            <%= form.text_area :question, rows: 3, id: "question-input", class: "form-control" %>
+          </div>
+          </br>
+          <!-- Buttons Section -->
+          <div class="d-flex justify-content-start align-items-center">
+            <!-- Ask Button -->
+            <%= form.submit "Ask", class: "btn btn-primary me-2" %>
+
+            <!-- Start Voice Recognition Button -->
+            <button type="button" id="start-voice-btn" class="btn btn-primary me-2">🎤 Start Voice Recognition</button>
+
+            <!-- Stop Voice Recognition Button -->
+            <button type="button" id="stop-voice-btn" class="btn btn-primary" style="display: none;">Stop</button>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
-<% end %>
+</div>
 
 
+  
+</div>
 
+<style>
 
+  .fixed-form {
+    position: fixed;
+    bottom: 30px;
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+  .fixed-form {
+    width: 84%; /* Set width to 90% for larger screens */
+    margin: 0 auto; /* Center the fixed-form horizontally */
+  }
+}  
+   
+  
+</style>
 
 
 <script data-turbo-eval="false">

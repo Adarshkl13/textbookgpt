@@ -1,16 +1,45 @@
-<h2>Forgot your password?</h2>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Forgot Your Password?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  </head>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+  <!-- Make the body a display container so we can center content vertically & horizontally -->
+  <body class="w3-light-grey w3-display-container" style="height: 100vh;">
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
+    <!-- Centered card for the forgot password form -->
+    <div class="w3-display-middle w3-card w3-white w3-padding" style="max-width: 400px; width: 80%;">
+      <h2 class="w3-center">Forgot Your Password?</h2>
 
-<%= render "devise/shared/links" %>
+      <!-- Devise Forgot Password Form -->
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+        <!-- Error messages -->
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <!-- Email field -->
+        <div class="w3-margin-bottom">
+          <%= f.label :email, "Email", class: "w3-text-black" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w3-input w3-border" %>
+        </div>
+
+        <!-- Submit button -->
+        <div>
+          <%= f.submit "Send me reset password instructions", class: "w3-button w3-black w3-block" %>
+        </div>
+      <% end %>
+
+      <!-- Additional Links -->
+      <div class="w3-center" style="margin-top: 16px;">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+
+  </body>
+</html>

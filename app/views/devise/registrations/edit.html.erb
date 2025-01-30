@@ -1,43 +1,83 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My App - Edit Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <!-- W3.CSS (if not already included in your layout) -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  </head>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+  <body class="w3-light-grey w3-display-container" style="height: 100vh;">
 
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
-  </div>
+    <!-- Centered card for the edit account form -->
+    <div class="w3-display-middle w3-card w3-white w3-padding" style="max-width: 900px; width: 100%;">
+      <h2 class="w3-center">Edit <%= resource_name.to_s.humanize %></h2>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+        <!-- Devise error messages -->
+        <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
+        <!-- Email field -->
+        <div class="w3-margin-bottom">
+          <%= f.label :email %><br>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w3-input w3-border" %>
+        </div>
 
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
+        <!-- Pending reconfirmation (if applicable) -->
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div class="w3-margin-bottom">
+            Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+          </div>
+        <% end %>
 
-<h3>Cancel my account</h3>
+        <!-- Password field -->
+        <div class="w3-margin-bottom">
+          <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br>
+          <%= f.password_field :password, autocomplete: "new-password", class: "w3-input w3-border" %>
+          <% if @minimum_password_length %>
+            <br>
+            <em><%= @minimum_password_length %> characters minimum</em>
+          <% end %>
+        </div>
 
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
+        <!-- Password confirmation -->
+        <div class="w3-margin-bottom">
+          <%= f.label :password_confirmation %><br>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w3-input w3-border" %>
+        </div>
 
-<%= link_to "Back", :back %>
+        <!-- Current password -->
+        <div class="w3-margin-bottom">
+          <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br>
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "w3-input w3-border" %>
+        </div>
+
+        <!-- Submit button -->
+        <div>
+          <%= f.submit "Update", class: "w3-button w3-black w3-block" %>
+        </div>
+      <% end %>
+
+      <!-- Cancel account section -->
+      <h3 class="w3-center" style="margin-top: 16px;">Cancel my account</h3>
+      <div class="w3-margin-bottom w3-center">
+        Unhappy? 
+        <%= button_to "Cancel my account", registration_path(resource_name), 
+            data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, 
+            method: :delete, class: "w3-button w3-red" %>
+      </div>
+
+      <!-- Back link -->
+      <div class="w3-center">
+        <%= link_to "Back", :back, class: "w3-button w3-light-grey" %>
+      </div>
+    </div>
+
+  </body>
+</html>

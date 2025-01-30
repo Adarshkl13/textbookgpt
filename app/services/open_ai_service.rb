@@ -1,4 +1,4 @@
-# app/services/openai_service.rb
+# app/services/open_ai_service.rb
 class OpenAiService
     def self.ask_question(prompt)
       client = OpenAI::Client.new
